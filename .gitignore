@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+*.local
+.vite
+
+# leftover empty nested clone (delete manually)
+/portfolio/
+dev.log
