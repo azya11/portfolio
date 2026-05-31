@@ -89,39 +89,42 @@ export function useCountUp(target, { duration = 1400, decimals = 0 } = {}) {
   return [ref, display]
 }
 
-/* Typewriter that cycles through a list of words. */
-export function useRotatingText(words, { type = 70, pause = 1600, erase = 38 } = {}) {
-  const [text, setText] = useState('')
-  const [idx, setIdx] = useState(0)
-
+/* Typewriter that cycles through a list of words. Writes straight to the
+   element's textContent (via the returned ref) so it never triggers a React
+   re-render — stays smooth even while the WebGL shader is busy. */
+export function useRotatingText(words, { type = 70, pause = 1500, erase = 36 } = {}) {
+  const ref = useRef(null)
   useEffect(() => {
-    if (prefersReduced()) { setText(words[0]); return }
+    const node = ref.current
+    if (!node) return
+    if (prefersReduced()) { node.textContent = words[0]; return }
+
     let timeout
-    const current = words[idx % words.length]
-    let phase = 'typing'
-    let i = 0
-
-    const step = () => {
-      if (phase === 'typing') {
-        i++
-        setText(current.slice(0, i))
-        if (i >= current.length) { phase = 'pausing'; timeout = setTimeout(step, pause) }
-        else timeout = setTimeout(step, type)
-      } else if (phase === 'pausing') {
-        phase = 'erasing'
-        timeout = setTimeout(step, erase)
-      } else {
-        i--
-        setText(current.slice(0, i))
-        if (i <= 0) { setIdx((v) => v + 1) }
-        else timeout = setTimeout(step, erase)
+    let idx = 0
+    const cycle = () => {
+      const word = words[idx % words.length]
+      let i = 0
+      let phase = 'typing'
+      const step = () => {
+        if (phase === 'typing') {
+          node.textContent = word.slice(0, ++i)
+          timeout = setTimeout(step, i >= word.length ? ((phase = 'pausing'), pause) : type)
+        } else if (phase === 'pausing') {
+          phase = 'erasing'
+          timeout = setTimeout(step, erase)
+        } else {
+          node.textContent = word.slice(0, --i)
+          if (i <= 0) { idx++; timeout = setTimeout(cycle, 220) }
+          else timeout = setTimeout(step, erase)
+        }
       }
+      step()
     }
-    timeout = setTimeout(step, type)
+    cycle()
     return () => clearTimeout(timeout)
-  }, [idx, words, type, pause, erase])
+  }, [words, type, pause, erase])
 
-  return text
+  return ref
 }
 
 /* Tracks which section id is currently in view → for nav highlighting. */

@@ -307,21 +307,23 @@ nav.topnav.scrolled {
 /* rotating role line */
 .role-line {
   font-family: var(--font-mono);
-  font-size: clamp(14px, 2.1vw, 18px);
+  font-size: clamp(13px, 2.1vw, 18px);
   color: var(--text);
   margin: 18px 0 22px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  gap: 9px;
   min-height: 1.5em;
 }
 .role-line .arrow { color: var(--accent); }
 .role-line .rot { color: var(--accent-cool); }
 .role-line .caret {
   display: inline-block;
-  width: 9px; height: 1.05em;
+  width: 8px; height: 1.05em;
   background: var(--accent);
-  margin-left: -6px;
+  margin-left: -4px;
   transform: translateY(2px);
   animation: blink 1.05s step-end infinite;
 }

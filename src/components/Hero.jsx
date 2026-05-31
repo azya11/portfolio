@@ -14,7 +14,7 @@ function Stat({ value, suffix, label, decimals }) {
 }
 
 export default function Hero() {
-  const role = useRotatingText([
+  const roleRef = useRotatingText([
     'backend systems',
     'RESTful APIs',
     'CI/CD pipelines',
@@ -38,8 +38,8 @@ export default function Hero() {
           </h1>
           <div className="role-line">
             <span className="arrow">{'>'}</span>
-            <span>I build&nbsp;</span>
-            <span className="rot">{role}</span>
+            <span>I build</span>
+            <span className="rot" ref={roleRef} />
             <span className="caret" />
           </div>
           <p className="lead">
