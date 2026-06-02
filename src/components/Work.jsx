@@ -3,6 +3,15 @@ import { useTilt } from '../hooks.js'
 // Featured projects. image: '/projects/foo.jpg' (drop the file in /public/projects).
 const projects = [
   {
+    title: 'Mapgen',
+    meta: 'Personal Project · 2026',
+    blurb:
+      'An AI pipeline that turns a natural-language prompt into a renderable 3D map. Claude tool-use parses the description into a validated scene spec, then real places are geocoded and built from live OpenStreetMap footprints + elevation data into a 3D scene you can export as GLB, OBJ, or STL — served by a hardened FastAPI app with Argon2 auth and CSRF protection.',
+    tags: ['Python', 'FastAPI', 'Claude API', 'Three.js', 'OpenStreetMap'],
+    image: '/projects/mapgen.png',
+    link: 'https://mapgen-zeta.vercel.app/',
+  },
+  {
     title: 'WatchDNA',
     meta: 'Team Lead · AI + AR Capstone · 2025–2026',
     blurb:
