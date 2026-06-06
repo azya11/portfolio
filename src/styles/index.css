@@ -88,6 +88,22 @@ img {
   color: var(--ink);
 }
 
+/* Persistent "selected text" highlight — wraps each line tightly like a real
+   text selection, for key lines that need to read clearly over the live grid. */
+.hl {
+  background-color: var(--accent);
+  color: var(--ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0.04em 0.26em;
+  border-radius: 2px;
+  text-shadow: none;
+  -webkit-text-fill-color: var(--ink);
+}
+.hl strong {
+  color: inherit;
+}
+
 .container {
   width: 100%;
   max-width: var(--maxw);

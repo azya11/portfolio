@@ -21,7 +21,7 @@ export default function Experience() {
 
         <div className="timeline">
           {roles.map((r, i) => (
-            <Reveal as="article" className="xp" key={r.company} delay={i * 0.06}>
+            <Reveal as="article" className="xp" key={r.company} dir={i % 2 ? 'right' : 'left'}>
               <div className="xp-line" aria-hidden="true" />
               <div className="xp-head">
                 <h3>

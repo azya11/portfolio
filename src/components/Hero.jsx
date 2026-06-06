@@ -73,7 +73,7 @@ export default function Hero({ ready }) {
         </motion.div>
 
         <motion.p className="hero-lead" variants={item}>
-          {lead}
+          <span className="hl">{lead}</span>
         </motion.p>
 
         <motion.div className="cta-row" variants={item}>

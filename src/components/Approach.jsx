@@ -18,7 +18,7 @@ export default function Approach() {
             </RevealLine>{' '}
             <RevealLine delay={0.12}>about building</RevealLine>
           </h2>
-          <Reveal as="p" className="section-intro" delay={0.12}>
+          <Reveal as="p" className="section-intro" dir="left">
             A few principles I keep coming back to — they shape how I write, test,
             and ship software.
           </Reveal>
@@ -26,7 +26,7 @@ export default function Approach() {
 
         <div className="principles-grid">
           {principles.map((p, i) => (
-            <Reveal as="article" className="principle" key={p.title} delay={i * 0.06}>
+            <Reveal as="article" className="principle" key={p.title} dir={i % 2 ? 'right' : 'left'}>
               <span className="principle-num">{String(i + 1).padStart(2, '0')}</span>
               <h3>{p.title}</h3>
               <p>{p.body}</p>

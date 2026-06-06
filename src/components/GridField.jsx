@@ -28,7 +28,6 @@ function Scene() {
   const { size, camera } = useThree()
   const meshRef = useRef()
   const lineRef = useRef()
-  const magentaRef = useRef()
   const ptr = useRef({ x: 0, y: 0, on: false })
   const lastCell = useRef(-1)
 
@@ -54,8 +53,20 @@ function Scene() {
   const heights = useMemo(() => new Float32Array(count), [count]) // current press depth
   const pressedAt = useMemo(() => new Float64Array(count), [count]) // 0 = idle
   const cubeGeo = useMemo(() => new THREE.BoxGeometry(grid.cw, grid.ch, grid.depth), [grid])
+  // BoxGeometry material order: +X, -X, +Y, -Y, +Z(top/lid), -Z(back).
+  // Side walls (the four X/Y faces revealed when a cube is pressed in) are dark
+  // cyan; the lid + back stay near-black so the resting field reads dark.
+  const cubeMats = useMemo(() => {
+    const side = new THREE.MeshStandardMaterial({ color: '#0c3531', roughness: 0.5, metalness: 0.2 })
+    const lid = new THREE.MeshStandardMaterial({ color: '#080f13', roughness: 0.55, metalness: 0.15 })
+    return [side, side, side, side, lid, lid]
+  }, [])
   const frameGeo = useMemo(() => makeCubeFrame(grid.cw, grid.ch, grid.depth), [grid])
   const dummy = useMemo(() => new THREE.Object3D(), [])
+  // edge colours: dim cyan at rest → bright cyan when pressed in
+  const edgeIdle = useMemo(() => new THREE.Color('#2fe6c7').multiplyScalar(0.32), [])
+  const edgeHot = useMemo(() => new THREE.Color(0.5, 1.0, 0.92), [])
+  const edgeTmp = useMemo(() => new THREE.Color(), [])
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const plane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), [])
   const ndc = useMemo(() => new THREE.Vector2(), [])
@@ -108,11 +119,6 @@ function Scene() {
       lastCell.current = cell
     }
 
-    if (magentaRef.current) {
-      magentaRef.current.position.set(hit.x, hit.y, 3.2)
-      magentaRef.current.intensity = ptr.current.on ? 16 : 0
-    }
-
     const m = meshRef.current
     const l = lineRef.current
     if (!m || !l) return
@@ -133,36 +139,44 @@ function Scene() {
       dummy.updateMatrix()
       m.setMatrixAt(k, dummy.matrix)
       l.setMatrixAt(k, dummy.matrix)
+
+      // brighten the cyan edges in proportion to how far the cube is pressed
+      const t = depth > 0 ? Math.min(1, h / depth) : 0
+      edgeTmp.copy(edgeIdle).lerp(edgeHot, t)
+      l.setColorAt(k, edgeTmp)
     }
     m.instanceMatrix.needsUpdate = true
     l.instanceMatrix.needsUpdate = true
+    if (l.instanceColor) l.instanceColor.needsUpdate = true
   })
 
   return (
     <>
-      <ambientLight intensity={0.28} color="#2b3856" />
-      <pointLight ref={magentaRef} color="#ff2e7e" intensity={0} distance={16} decay={1.3} />
+      <ambientLight intensity={0.34} color="#243a4a" />
       <pointLight
         color="#16e0c8"
         intensity={11}
-        distance={22}
-        decay={1.2}
+        distance={24}
+        decay={1.1}
         position={[VIS_W * 0.42, VIS_H * 0.12, 3.2]}
       />
       <pointLight
         color="#16e0c8"
-        intensity={5}
-        distance={22}
-        decay={1.3}
+        intensity={6}
+        distance={24}
+        decay={1.2}
         position={[VIS_W * 0.5, -VIS_H * 0.4, 3]}
       />
 
-      <instancedMesh ref={meshRef} key={`box-${count}`} args={[cubeGeo, undefined, count]} frustumCulled={false}>
-        <meshStandardMaterial color="#0a0e14" roughness={0.5} metalness={0.18} />
-      </instancedMesh>
+      <instancedMesh
+        ref={meshRef}
+        key={`box-${count}`}
+        args={[cubeGeo, cubeMats, count]}
+        frustumCulled={false}
+      />
 
       <instancedMesh ref={lineRef} key={`edge-${count}`} args={[frameGeo, undefined, count]} frustumCulled={false}>
-        <meshBasicMaterial color="#aebfd8" transparent opacity={0.34} />
+        <meshBasicMaterial color="#ffffff" transparent opacity={0.7} toneMapped={false} />
       </instancedMesh>
     </>
   )

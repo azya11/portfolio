@@ -24,7 +24,7 @@ export default function About() {
         </div>
 
         <div className="about-grid">
-          <Reveal className="about-photo-wrap">
+          <Reveal className="about-photo-wrap" dir="left">
             <div className="about-photo">
               <div
                 className="about-photo-img"
@@ -37,8 +37,10 @@ export default function About() {
             <div className="about-badge">{aboutBadge}</div>
           </Reveal>
 
-          <Reveal className="about-text" delay={0.08}>
-            <p className="about-pull">{aboutParagraphs[1]}</p>
+          <Reveal className="about-text" dir="right">
+            <p className="about-pull">
+              <span className="hl">{aboutParagraphs[1]}</span>
+            </p>
             {[aboutParagraphs[0], aboutParagraphs[2], aboutParagraphs[3]].map((p, i) => (
               <p key={i}>{p}</p>
             ))}
