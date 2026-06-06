@@ -1,107 +1,156 @@
-import { useTilt } from '../hooks.js'
+import { useState } from 'react'
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
+import { projects } from '../data/projects.js'
+import { useMediaPrefs } from '../lib/useMediaPrefs.js'
+import { Reveal, RevealLine } from './Reveal.jsx'
 
-// Featured projects. image: '/projects/foo.jpg' (drop the file in /public/projects).
-const projects = [
-  {
-    title: 'Mapgen',
-    meta: 'Personal Project · 2026',
-    blurb:
-      'An AI pipeline that turns a natural-language prompt into a renderable 3D map. Claude tool-use parses the description into a validated scene spec, then real places are geocoded and built from live OpenStreetMap footprints + elevation data into a 3D scene you can export as GLB, OBJ, or STL — served by a hardened FastAPI app with Argon2 auth and CSRF protection.',
-    tags: ['Python', 'FastAPI', 'Claude API', 'Three.js', 'OpenStreetMap'],
-    image: '/projects/mapgen.png',
-    link: 'https://mapgen-zeta.vercel.app/',
-  },
-  {
-    title: 'WatchDNA',
-    meta: 'Team Lead · AI + AR Capstone · 2025–2026',
-    blurb:
-      'AI + AR capstone. Elected Team Lead — ran the Scrum process, owned the TypeScript backend and every user story, documented endpoints with Swagger, and containerized the whole stack with Docker + Kubernetes behind a CI/CD pipeline.',
-    tags: ['Python', 'PyTorch', 'TypeScript', 'Docker', 'Kubernetes'],
-    image: '/projects/watchdna.png',
-    link: 'https://watchdna.com/',
-  },
-  {
-    title: 'Frienvas',
-    meta: 'Personal Project · 2025–2026',
-    blurb:
-      'A Chrome extension that lets students form friend groups and share Canvas LMS deadlines in real time. Privacy-first by design: credentials stay on-device while a Manifest V3 service worker syncs deadlines every 30 minutes.',
-    tags: ['JavaScript', 'Firebase', 'Vite', 'Chrome Extensions'],
-    image: '/projects/frienvas.png',
-    fit: 'contain',
-    link: null,
-  },
-  {
-    title: 'QR Payment Platform',
-    meta: 'TAS Group · Production · 2023–2025',
-    blurb:
-      'Production payment & B2B backend serving 70k+ active users. Built 6–10 microservices exposing REST/SOAP APIs at hundreds of requests per second, backed by Kafka, RabbitMQ, and tuned MS SQL / PostgreSQL.',
-    tags: ['C#', '.NET', 'Kafka', 'RabbitMQ', 'MS SQL'],
-    image: '/projects/qr-payments.jpg',
-    link: null,
-  },
-]
+const EASE = [0.16, 1, 0.3, 1]
 
-function ProjectCard({ p, i }) {
-  const tilt = useTilt(6)
-  const Tag = p.link ? 'a' : 'article'
-  const linkProps = p.link ? { href: p.link, target: '_blank', rel: 'noreferrer' } : {}
-  const thumbStyle =
-    p.image && p.fit === 'contain'
-      ? { backgroundImage: `url(${p.image})`, backgroundSize: '58%', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }
-      : p.image
-        ? { background: `center/cover no-repeat url(${p.image})` }
-        : undefined
+function SectionHead() {
+  return (
+    <div className="section-head">
+      <div className="kicker">
+        <span className="kicker-idx">01</span>
+        <span>Selected Work</span>
+        <span className="kicker-rule" />
+      </div>
+      <h2 className="section-title">
+        <RevealLine>Things I’ve</RevealLine>{' '}
+        <RevealLine delay={0.08}>
+          <em>built</em>
+        </RevealLine>
+      </h2>
+      <Reveal as="p" className="section-intro" delay={0.1}>
+        From an AI/AR capstone to a production payment platform serving tens of
+        thousands of people — a few systems I’ve shipped end to end.
+      </Reveal>
+    </div>
+  )
+}
+
+function Thumb({ p }) {
+  if (p.image) {
+    return <img src={p.image} alt={p.title} loading="lazy" />
+  }
+  return <div className="thumb-placeholder">{p.title}</div>
+}
+
+/* Desktop: hover-reveal list with a cursor-following image preview. */
+function GalleryList() {
+  const [active, setActive] = useState(null)
+  const mx = useMotionValue(0)
+  const my = useMotionValue(0)
+  const x = useSpring(mx, { stiffness: 240, damping: 28, mass: 0.5 })
+  const y = useSpring(my, { stiffness: 240, damping: 28, mass: 0.5 })
+
+  const onMove = (e) => {
+    mx.set(e.clientX)
+    my.set(e.clientY)
+  }
 
   return (
-    <Tag
-      ref={tilt}
-      className={`work-card reveal${p.link ? ' is-link' : ''}`}
-      style={{ transitionDelay: `${i * 70}ms` }}
-      {...linkProps}
-    >
-      <div className="work-thumb" style={thumbStyle}>
-        <span className="work-num">{String(i + 1).padStart(2, '0')}</span>
-      </div>
-      <div className="work-body">
-        <div className="work-meta">{p.meta}</div>
-        <h3>
-          {p.title}
-          {p.link && <span className="ext">↗</span>}
-        </h3>
-        <p>{p.blurb}</p>
-        <div className="tags">
-          {p.tags.map((t) => (
-            <span className="tag" key={t}>{t}</span>
-          ))}
+    <div className="work-gallery" onMouseMove={onMove} onMouseLeave={() => setActive(null)}>
+      <ul className="work-list">
+        {projects.map((p, i) => {
+          const Tag = p.link ? 'a' : 'div'
+          const linkProps = p.link
+            ? { href: p.link, target: '_blank', rel: 'noreferrer' }
+            : {}
+          return (
+            <li key={p.title}>
+              <Reveal delay={i * 0.05}>
+                <Tag
+                  className={`work-row${active === i ? ' is-active' : ''}${p.link ? ' is-link' : ''}`}
+                  onMouseEnter={() => setActive(i)}
+                  {...linkProps}
+                >
+                  <span className="work-idx">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="work-title">
+                    {p.title}
+                    {p.link && <span className="work-ext">↗</span>}
+                  </span>
+                  <span className="work-meta">{p.meta}</span>
+                  <span className="work-tags">
+                    {p.tags.slice(0, 3).map((t) => (
+                      <span className="tag" key={t}>
+                        {t}
+                      </span>
+                    ))}
+                  </span>
+                </Tag>
+              </Reveal>
+            </li>
+          )
+        })}
+      </ul>
+
+      <motion.div className="work-preview" style={{ x, y }} aria-hidden="true">
+        <div className="work-preview-offset">
+          <AnimatePresence mode="popLayout">
+            {active !== null && (
+              <motion.div
+                key={active}
+                className="work-preview-card"
+                initial={{ clipPath: 'inset(100% 0 0 0)', opacity: 0.4, scale: 1.06 }}
+                animate={{ clipPath: 'inset(0% 0 0 0)', opacity: 1, scale: 1 }}
+                exit={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
+                transition={{ duration: 0.5, ease: EASE }}
+              >
+                <Thumb p={projects[active]} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      </div>
-    </Tag>
+      </motion.div>
+    </div>
+  )
+}
+
+/* Touch / reduced-motion: simple card grid with visible images. */
+function CardGrid() {
+  return (
+    <div className="work-cards">
+      {projects.map((p, i) => {
+        const Tag = p.link ? 'a' : 'article'
+        const linkProps = p.link
+          ? { href: p.link, target: '_blank', rel: 'noreferrer' }
+          : {}
+        return (
+          <Reveal key={p.title} delay={i * 0.05}>
+            <Tag className={`work-card${p.link ? ' is-link' : ''}`} {...linkProps}>
+              <div className="work-card-thumb">
+                <Thumb p={p} />
+              </div>
+              <div className="work-card-body">
+                <span className="work-meta">{p.meta}</span>
+                <h3>
+                  {p.title}
+                  {p.link && <span className="work-ext">↗</span>}
+                </h3>
+                <p>{p.blurb}</p>
+                <div className="work-tags">
+                  {p.tags.map((t) => (
+                    <span className="tag" key={t}>
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </Tag>
+          </Reveal>
+        )
+      })}
+    </div>
   )
 }
 
 export default function Work() {
+  const { isTouch } = useMediaPrefs()
   return (
-    <section className="section-pad solid-bg" id="work">
+    <section className="section" id="work">
       <div className="container">
-        <div className="section-head reveal">
-          <div className="section-kicker">
-            <span className="idx">01</span>
-            <span>Selected Work</span>
-            <span className="rule" />
-          </div>
-          <h2 className="section-title">
-            Things I’ve <em>built</em>
-          </h2>
-          <p className="section-intro">
-            From an AI/AR capstone to a production payment platform serving tens of
-            thousands of people — a few systems I’ve shipped end to end.
-          </p>
-        </div>
-        <div className="work-grid">
-          {projects.map((p, i) => (
-            <ProjectCard p={p} i={i} key={p.title} />
-          ))}
-        </div>
+        <SectionHead />
+        {isTouch ? <CardGrid /> : <GalleryList />}
       </div>
     </section>
   )

@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
-import { useActiveSection } from '../hooks.js'
+import { motion } from 'framer-motion'
+import { identity } from '../data/content.js'
+import { useSmoothScroll } from '../lib/SmoothScroll.jsx'
 
 const links = [
-  { id: 'work', label: 'Work' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'about', label: 'About' },
-  { id: 'approach', label: 'Approach' },
-  { id: 'contact', label: 'Contact' },
+  { label: 'Work', href: '#work' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
 ]
 
-export default function Nav() {
-  const active = useActiveSection(['top', ...links.map((l) => l.id)])
+export default function Nav({ ready }) {
   const [scrolled, setScrolled] = useState(false)
+  const smooth = useSmoothScroll()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -20,21 +21,35 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const go = (e, href) => {
+    e.preventDefault()
+    smooth?.scrollTo(href, { offset: -10 })
+  }
+
   return (
-    <nav className={`topnav${scrolled ? ' scrolled' : ''}`}>
-      <a className="logo" href="#top">
-        <span className="dot" />
-        AZIZ<span>.S</span>
-      </a>
-      <ul>
-        {links.map((l) => (
-          <li key={l.id}>
-            <a href={`#${l.id}`} className={active === l.id ? 'active' : ''}>
+    <motion.header
+      className={`nav${scrolled ? ' is-scrolled' : ''}`}
+      initial={{ y: -80, opacity: 0 }}
+      animate={ready ? { y: 0, opacity: 1 } : { y: -80, opacity: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+    >
+      <div className="nav-inner container">
+        <a className="nav-mark" href="#top" onClick={(e) => go(e, '#top')}>
+          <span className="nav-mark-dot" />
+          {identity.firstName} {identity.lastName[0]}.
+        </a>
+        <nav className="nav-links">
+          {links.map((l) => (
+            <a key={l.href} href={l.href} onClick={(e) => go(e, l.href)}>
               {l.label}
             </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+          ))}
+        </nav>
+        <a className="nav-status" href="#contact" onClick={(e) => go(e, '#contact')}>
+          <span className="live" />
+          Available
+        </a>
+      </div>
+    </motion.header>
   )
 }

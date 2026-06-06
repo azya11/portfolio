@@ -1,73 +1,63 @@
-const skillGroups = [
-  { label: 'Languages', items: ['C#', 'C++', 'TypeScript', 'JavaScript', 'Python', 'Java', 'OCaml'] },
-  { label: 'Frameworks', items: ['.NET', 'ASP.NET Core', 'React', 'Node.js', 'PyTorch', 'RESTful APIs'] },
-  { label: 'Data', items: ['MS SQL', 'PostgreSQL', 'Redis', 'Kafka', 'RabbitMQ'] },
-  { label: 'Cloud & Ops', items: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD', 'GitHub Actions'] },
-  { label: 'Testing', items: ['xUnit', 'Moq', 'Jest', 'JUnit'] },
-]
+import { aboutParagraphs, aboutBadge } from '../data/content.js'
+import { skillGroups } from '../data/skills.js'
+import { useParallax } from '../lib/hooks.js'
+import { Reveal, RevealLine } from './Reveal.jsx'
 
 export default function About() {
+  const photoInner = useParallax(0.08)
+
   return (
-    <section className="section-pad solid-bg" id="about">
+    <section className="section" id="about">
       <div className="container">
-        <div className="section-head reveal">
-          <div className="section-kicker">
-            <span className="idx">03</span>
+        <div className="section-head">
+          <div className="kicker">
+            <span className="kicker-idx">03</span>
             <span>About</span>
-            <span className="rule" />
+            <span className="kicker-rule" />
           </div>
           <h2 className="section-title">
-            A bit about <em>me</em>
+            <RevealLine>A bit about</RevealLine>{' '}
+            <RevealLine delay={0.08}>
+              <em>me</em>
+            </RevealLine>
           </h2>
         </div>
-        <div className="about-grid reveal">
-          <div className="about-photo-wrap">
-            <div
-              className="about-photo"
-              style={{ background: 'center 42% / cover no-repeat url(/me.jpg)' }}
-              role="img"
-              aria-label="Photo of Aziz Shamuratov"
-            />
-            <div className="about-badge">
-              <b>B.S. CS</b> · ASU ’26
+
+        <div className="about-grid">
+          <Reveal className="about-photo-wrap">
+            <div className="about-photo">
+              <div
+                className="about-photo-img"
+                ref={photoInner}
+                style={{ backgroundImage: 'url(/me.jpg)' }}
+                role="img"
+                aria-label="Photo of Aziz Shamuratov"
+              />
             </div>
-          </div>
-          <div className="about-text">
-            <p>
-              <strong>Hi, I’m Aziz.</strong> I’m a software developer in Tempe,
-              Arizona, finishing my B.S. in Computer Science at Arizona State
-              University this May.
-            </p>
-            <p className="about-pull">
-              I’m drawn to the work no one sees but everyone feels — the API that
-              never surprises you, the test that catches the bug before it ships.
-            </p>
-            <p>
-              Over the last three years I’ve shipped production backends and
-              full-stack features — from QR payment microservices serving{' '}
-              <strong>70k+ users</strong> to AI/AR capstone work as a team lead. I
-              care about clean contracts, honest test coverage, and automating the
-              boring parts so a team can focus on the hard ones.
-            </p>
-            <p>
-              Outside of code I co-founded the{' '}
-              <strong>Central Asian Student Association</strong> at ASU, placed as a{' '}
-              <strong>2× Amazon Hackathon</strong> finalist, and won a{' '}
-              <strong>Claude Hackathon</strong>.
-            </p>
+            <div className="about-badge">{aboutBadge}</div>
+          </Reveal>
+
+          <Reveal className="about-text" delay={0.08}>
+            <p className="about-pull">{aboutParagraphs[1]}</p>
+            {[aboutParagraphs[0], aboutParagraphs[2], aboutParagraphs[3]].map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+
             <div className="skill-groups">
               {skillGroups.map((g) => (
                 <div className="skill-group" key={g.label}>
-                  <div className="gl">{g.label}</div>
+                  <div className="skill-label">{g.label}</div>
                   <div className="skill-row">
                     {g.items.map((s) => (
-                      <span className="tag" key={s}>{s}</span>
+                      <span className="tag" key={s}>
+                        {s}
+                      </span>
                     ))}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

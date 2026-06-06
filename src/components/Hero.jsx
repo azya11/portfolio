@@ -1,77 +1,108 @@
-import { useRotatingText, useCountUp, useMagnetic } from '../hooks.js'
+import { motion } from 'framer-motion'
+import { identity, rotatingRoles, stats, lead } from '../data/content.js'
+import { useRotatingText, useCountUp, useMagnetic } from '../lib/hooks.js'
+import { useMediaPrefs } from '../lib/useMediaPrefs.js'
 
-function Stat({ value, suffix, label, decimals }) {
-  const [ref, display] = useCountUp(value, { decimals })
+const EASE = [0.16, 1, 0.3, 1]
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+}
+const item = {
+  hidden: { opacity: 0, y: 26 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: EASE } },
+}
+
+function Stat({ value, suffix, label, start }) {
+  const [ref, display] = useCountUp(value, { start })
   return (
     <div className="stat">
-      <div className="num" ref={ref}>
+      <div className="stat-num" ref={ref}>
         {display}
-        {suffix && <span className="suffix">{suffix}</span>}
+        {suffix && <span className="stat-suffix">{suffix}</span>}
       </div>
-      <div className="label">{label}</div>
+      <div className="stat-label">{label}</div>
     </div>
   )
 }
 
-export default function Hero() {
-  const roleRef = useRotatingText([
-    'backend systems',
-    'RESTful APIs',
-    'CI/CD pipelines',
-    'event-driven services',
-    'full-stack products',
-  ])
-  const primary = useMagnetic(0.3)
-  const ghost = useMagnetic(0.3)
+export default function Hero({ ready }) {
+  const { reducedMotion } = useMediaPrefs()
+  const roleRef = useRotatingText(rotatingRoles)
+  const primary = useMagnetic(0.25)
+  const ghost = useMagnetic(0.25)
+  const state = reducedMotion || ready ? 'show' : 'hidden'
 
   return (
     <section className="hero" id="top">
-      <div className="container">
-        <div className="hero-card">
+      <div className="hero-glow" aria-hidden="true" />
+      <span className="hero-rail" aria-hidden="true">
+        {identity.title} · {identity.year}
+      </span>
+
+      <motion.div
+        className="container hero-inner"
+        variants={container}
+        initial={reducedMotion ? 'show' : 'hidden'}
+        animate={state}
+      >
+        <motion.div className="hero-top" variants={item}>
           <span className="status">
             <span className="live" />
-            Available · May 2026 grad
+            {identity.availability}
           </span>
-          <p className="coords">33.4255° N, 111.9400° W — Tempe, Arizona</p>
-          <h1>
-            Aziz <span className="grad">Shamuratov</span>
-          </h1>
-          <div className="role-line">
-            <span className="arrow">{'>'}</span>
-            <span>I build</span>
-            <span className="rot" ref={roleRef} />
-            <span className="caret" />
-          </div>
-          <p className="lead">
-            Software developer with <strong>3 years</strong> shipping production
-            backends and full-stack features across <strong>React</strong>,{' '}
-            <strong>Node.js</strong>, and <strong>.NET</strong>. I like the
-            invisible work — clean APIs, real test coverage, and pipelines that
-            let a team move fast without breaking things.
-          </p>
-          <div className="cta-row">
-            <a className="btn primary" href="#work" ref={primary}>
-              View work <span className="ic">↗</span>
+          <span className="coords">
+            {identity.coords} — {identity.location}
+          </span>
+        </motion.div>
+
+        <h1 className="hero-title">
+          <motion.span className="line" variants={item}>
+            Aziz
+          </motion.span>
+          <motion.span className="line" variants={item}>
+            <em>Shamuratov</em>
+          </motion.span>
+        </h1>
+
+        <motion.div className="role-line" variants={item}>
+          <span className="arrow">{'>'}</span>
+          <span>I build</span>
+          <span className="rot" ref={roleRef} />
+          <span className="caret" />
+        </motion.div>
+
+        <motion.p className="hero-lead" variants={item}>
+          {lead}
+        </motion.p>
+
+        <motion.div className="cta-row" variants={item}>
+          <a className="btn btn-primary" href="#work" ref={primary}>
+            View work <span className="btn-ic">↗</span>
+          </a>
+          <a className="btn btn-ghost" href="#contact" ref={ghost}>
+            Get in touch
+          </a>
+          <div className="hero-quicklinks">
+            <a href={identity.github} target="_blank" rel="noreferrer">
+              GitHub
             </a>
-            <a className="btn ghost" href="#contact" ref={ghost}>
-              Get in touch
+            <a href={identity.linkedin} target="_blank" rel="noreferrer">
+              LinkedIn
             </a>
-            <div className="hero-quicklinks">
-              <a href="https://github.com/azya11" target="_blank" rel="noreferrer">GitHub</a>
-              <a href="https://linkedin.com/in/aziz-shamuratov-236575259" target="_blank" rel="noreferrer">LinkedIn</a>
-            </div>
           </div>
-          <div className="hero-stats">
-            <Stat value={70} suffix="k+" label="Users served" />
-            <Stat value={3} suffix="yrs" label="Experience" />
-            <Stat value={10} suffix="+" label="Microservices" />
-            <Stat value={85} suffix="%" label="Test coverage" />
-          </div>
-        </div>
-      </div>
-      <div className="scroll-hint">
-        <span>scroll</span>
-        <span className="track" />
+        </motion.div>
+
+        <motion.div className="hero-stats" variants={item}>
+          {stats.map((s) => (
+            <Stat key={s.label} {...s} start={reducedMotion || ready} />
+          ))}
+        </motion.div>
+      </motion.div>
+
+      <div className="scroll-cue" aria-hidden="true">
+        <span>Scroll</span>
+        <span className="scroll-cue-line" />
       </div>
     </section>
   )
