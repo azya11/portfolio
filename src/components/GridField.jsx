@@ -1,45 +1,36 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 
 // World is sized so the visible height at z=0 is VIS_H units (see camera dist).
 const VIS_H = 10
 const CELL_PX = 64 // target on-screen cell size
-const RADIUS = 2.4 // world radius of cursor influence
-const MAX_DEPTH = 1.8 // how far cells press DOWN, away from the viewer
-const BASE = 6 // slab thickness below the surface (so pressed walls have height)
-const EASE = 0.12 // lower = heavier / slower settle
+const HOLD_MS = 5000 // a pressed cube stays down this long before rising
+const EASE = 0.16 // press/release speed (lower = softer)
 
-function GridLines({ grid, z = 0.01 }) {
-  const geo = useMemo(() => {
-    const { cols, rows, cw, ch } = grid
-    const W = cw * cols
-    const H = ch * rows
-    const pts = []
-    for (let i = 0; i <= cols; i++) {
-      const x = -W / 2 + cw * i
-      pts.push(x, -H / 2, z, x, H / 2, z)
-    }
-    for (let j = 0; j <= rows; j++) {
-      const y = -H / 2 + ch * j
-      pts.push(-W / 2, y, z, W / 2, y, z)
-    }
-    const g = new THREE.BufferGeometry()
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3))
-    return g
-  }, [grid, z])
-  return (
-    <lineSegments geometry={geo}>
-      <lineBasicMaterial color="#9fb2cc" transparent opacity={0.1} />
-    </lineSegments>
-  )
+// 12-edge wireframe of a box (w×h×d), built once and only translated per
+// instance, so the edge thickness stays uniform. These are the cube's real
+// edges — including the inner/vertical ones — so each cell reads as a 3D cube.
+function makeCubeFrame(w, h, d) {
+  const t = Math.min(w, h) * 0.03
+  const hw = w / 2
+  const hh = h / 2
+  const hd = d / 2
+  const parts = []
+  for (const y of [hh, -hh]) for (const z of [hd, -hd]) parts.push(new THREE.BoxGeometry(w, t, t).translate(0, y, z))
+  for (const x of [hw, -hw]) for (const z of [hd, -hd]) parts.push(new THREE.BoxGeometry(t, h, t).translate(x, 0, z))
+  for (const x of [hw, -hw]) for (const y of [hh, -hh]) parts.push(new THREE.BoxGeometry(t, t, d).translate(x, y, 0))
+  return mergeGeometries(parts)
 }
 
 function Scene() {
   const { size, camera } = useThree()
   const meshRef = useRef()
+  const lineRef = useRef()
   const magentaRef = useRef()
   const ptr = useRef({ x: 0, y: 0, on: false })
+  const lastCell = useRef(-1)
 
   const aspect = size.width / size.height
   const VIS_W = VIS_H * aspect
@@ -49,17 +40,21 @@ function Scene() {
     const rows = Math.max(6, Math.round(size.height / CELL_PX))
     const cw = VIS_W / cols
     const ch = VIS_H / rows
+    const depth = Math.min(cw, ch) // cube depth ≈ footprint → a real cube
     const positions = []
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < cols; i++) {
         positions.push([-VIS_W / 2 + cw * (i + 0.5), -VIS_H / 2 + ch * (j + 0.5)])
       }
     }
-    return { cols, rows, cw, ch, positions }
+    return { cols, rows, cw, ch, depth, positions }
   }, [size.width, size.height, VIS_W])
 
   const count = grid.positions.length
-  const heights = useMemo(() => new Float32Array(count), [count])
+  const heights = useMemo(() => new Float32Array(count), [count]) // current press depth
+  const pressedAt = useMemo(() => new Float64Array(count), [count]) // 0 = idle
+  const cubeGeo = useMemo(() => new THREE.BoxGeometry(grid.cw, grid.ch, grid.depth), [grid])
+  const frameGeo = useMemo(() => makeCubeFrame(grid.cw, grid.ch, grid.depth), [grid])
   const dummy = useMemo(() => new THREE.Object3D(), [])
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const plane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), [])
@@ -86,13 +81,31 @@ function Scene() {
   }, [])
 
   useFrame(() => {
-    // Cursor → world point on the z=0 plane.
+    const now = performance.now()
+    const { cw, ch, cols, rows, depth } = grid
+    const hd = depth / 2
+
+    // Cursor → world point on the z=0 plane → which single cube it's over.
+    let cell = -1
     if (ptr.current.on) {
       ndc.set((ptr.current.x / size.width) * 2 - 1, -(ptr.current.y / size.height) * 2 + 1)
       raycaster.setFromCamera(ndc, camera)
       raycaster.ray.intersectPlane(plane, hit)
+      const gx = hit.x + VIS_W / 2
+      const gy = hit.y + VIS_H / 2
+      if (gx >= 0 && gy >= 0 && gx < VIS_W && gy < VIS_H) {
+        cell = Math.floor(gy / ch) * cols + Math.floor(gx / cw)
+      }
     } else {
       hit.set(9999, 9999, 0)
+    }
+
+    // Touch = entering a NEW cube. Triggers it only if it's currently idle, so a
+    // re-press needs the cursor to leave and come back (it won't retrigger while
+    // the cursor simply rests on it).
+    if (cell !== lastCell.current) {
+      if (cell >= 0 && cell < count && pressedAt[cell] === 0) pressedAt[cell] = now
+      lastCell.current = cell
     }
 
     if (magentaRef.current) {
@@ -101,36 +114,33 @@ function Scene() {
     }
 
     const m = meshRef.current
-    if (!m) return
-    const R2 = RADIUS * RADIUS
-    const { cw, ch } = grid
+    const l = lineRef.current
+    if (!m || !l) return
     for (let k = 0; k < count; k++) {
-      const p = grid.positions[k]
-      const dx = p[0] - hit.x
-      const dy = p[1] - hit.y
-      const d2 = dx * dx + dy * dy
-      let depth = 0
-      if (d2 < R2) {
-        const f = 1 - Math.sqrt(d2) / RADIUS
-        depth = MAX_DEPTH * (f * f * (3 - 2 * f)) // smoothstep falloff
+      // target depth: down while within the 5s window, otherwise back up
+      let target = 0
+      if (pressedAt[k] !== 0) {
+        if (now - pressedAt[k] < HOLD_MS) target = depth
+        else if (heights[k] < 0.01) pressedAt[k] = 0 // fully risen → idle again
       }
       let h = heights[k]
-      h += (depth - h) * EASE // h = current press depth (0 at rest)
+      h += (target - h) * EASE
+      if (h < 0.0005) h = 0
       heights[k] = h
-      // Cell fills its full grid square; its top sits at z=-h (pressed down),
-      // its body extends to z=-BASE so neighbouring walls have height to show.
-      const sz = BASE - h
-      dummy.position.set(p[0], p[1], (-h - BASE) / 2)
-      dummy.scale.set(cw, ch, sz)
+
+      const p = grid.positions[k]
+      dummy.position.set(p[0], p[1], -h - hd) // top face sits at z = -h
       dummy.updateMatrix()
       m.setMatrixAt(k, dummy.matrix)
+      l.setMatrixAt(k, dummy.matrix)
     }
     m.instanceMatrix.needsUpdate = true
+    l.instanceMatrix.needsUpdate = true
   })
 
   return (
     <>
-      <ambientLight intensity={0.2} color="#2b3856" />
+      <ambientLight intensity={0.28} color="#2b3856" />
       <pointLight ref={magentaRef} color="#ff2e7e" intensity={0} distance={16} decay={1.3} />
       <pointLight
         color="#16e0c8"
@@ -147,21 +157,22 @@ function Scene() {
         position={[VIS_W * 0.5, -VIS_H * 0.4, 3]}
       />
 
-      <GridLines grid={grid} />
-
-      <instancedMesh ref={meshRef} key={count} args={[undefined, undefined, count]} frustumCulled={false}>
-        <boxGeometry args={[1, 1, 1]} />
+      <instancedMesh ref={meshRef} key={`box-${count}`} args={[cubeGeo, undefined, count]} frustumCulled={false}>
         <meshStandardMaterial color="#0a0e14" roughness={0.5} metalness={0.18} />
+      </instancedMesh>
+
+      <instancedMesh ref={lineRef} key={`edge-${count}`} args={[frameGeo, undefined, count]} frustumCulled={false}>
+        <meshBasicMaterial color="#aebfd8" transparent opacity={0.34} />
       </instancedMesh>
     </>
   )
 }
 
 /**
- * WebGL interactive grid. Squares are real extruded boxes that rise toward the
- * viewer near the cursor (showing their side walls), washed by a magenta light
- * that follows the cursor and static teal lights. Sits behind all content.
- * Only mounted on the interactive (non-touch, non-reduced-motion) path by App.
+ * WebGL interactive grid of real 3D cubes. The cube directly under the cursor
+ * acts like a button: touch it and it presses DOWN, holds for 5s, then rises on
+ * its own — even if the cursor stays. Neighbours never move. Each cube shows its
+ * full 12-edge outline. Sits behind all content; interactive path only.
  */
 export default function GridField() {
   return (
