@@ -34,6 +34,7 @@ export default function App() {
         ) : (
           <div className="bg-grid" aria-hidden="true" />
         )}
+        <div className="bg-scrim" aria-hidden="true" />
         <div className="bg-grain" aria-hidden="true" />
         <Nav ready={!loading} />
         <main>

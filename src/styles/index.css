@@ -7,14 +7,17 @@
   --bg: #08090c;
   --bg-2: #0c0e12;
   --bg-elev: #101319;
-  --line: rgba(255, 255, 255, 0.09);
-  --line-2: rgba(255, 255, 255, 0.16);
-  --text: #f4f1ea;
-  --muted: #8b8d97;
-  --faint: #5b5d66;
-  --accent: #c8ff4d;
-  --accent-2: #8b6cff;
-  --ink: #08090c;
+  --line: rgba(180, 210, 230, 0.12);
+  --line-2: rgba(180, 210, 230, 0.2);
+  --text: #f3f6fb;
+  --muted: #b3bdce;
+  --faint: #7b8698;
+  --accent: #2fe6c7; /* cyan — matches the background teal light */
+  --accent-2: #ff4d8d; /* magenta — matches the background magenta light */
+  --ink: #04100e;
+
+  /* dark halo so text separates from the live 3D grid behind it */
+  --halo: 0 1px 2px rgba(3, 6, 10, 0.55), 0 2px 22px rgba(3, 6, 10, 0.45);
 
   --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -54,6 +57,14 @@ body {
   font-size: 16px;
   line-height: 1.55;
   overflow-x: hidden;
+  /* every bit of text gets a faint dark halo so it lifts off the live grid */
+  text-shadow: var(--halo);
+}
+/* keep solid-background UI crisp (no halo) */
+.btn-primary,
+.tag,
+.preloader-word-line {
+  text-shadow: none;
 }
 
 /* Lenis */
@@ -87,11 +98,26 @@ img {
 /* ---------------------------------------------------------------- backgrounds */
 .bg-grid,
 .bg-grain,
+.bg-scrim,
 .hero-glow {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
+}
+/* Calms the live 3D grid behind content: darker top/bottom (under nav + footer)
+   and a soft vignette, while leaving the centre readable. Sits above the canvas,
+   below all content. */
+.bg-scrim {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(4, 6, 10, 0.62) 0%,
+      rgba(4, 6, 10, 0.26) 16%,
+      rgba(4, 6, 10, 0.26) 84%,
+      rgba(4, 6, 10, 0.66) 100%
+    ),
+    radial-gradient(135% 95% at 50% 48%, rgba(4, 6, 10, 0) 38%, rgba(4, 6, 10, 0.5) 100%);
 }
 .bg-grid {
   background-image:
@@ -286,8 +312,8 @@ img {
   position: absolute;
   z-index: 0;
   background:
-    radial-gradient(40% 50% at 18% 22%, rgba(139, 108, 255, 0.18), transparent 70%),
-    radial-gradient(45% 45% at 82% 30%, rgba(200, 255, 77, 0.12), transparent 70%);
+    radial-gradient(42% 50% at 16% 24%, rgba(255, 77, 141, 0.1), transparent 70%),
+    radial-gradient(45% 45% at 84% 28%, rgba(47, 230, 199, 0.09), transparent 70%);
 }
 .hero-inner {
   position: relative;
@@ -469,7 +495,7 @@ img {
   color: var(--ink);
 }
 .btn-primary:hover {
-  background: #d6ff70;
+  background: #56f0d8;
 }
 .btn-ghost {
   border-color: var(--line-2);
@@ -996,13 +1022,13 @@ img {
 }
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0.5);
+    box-shadow: 0 0 0 0 rgba(47, 230, 199, 0.5);
   }
   70% {
-    box-shadow: 0 0 0 7px rgba(200, 255, 77, 0);
+    box-shadow: 0 0 0 7px rgba(47, 230, 199, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(200, 255, 77, 0);
+    box-shadow: 0 0 0 0 rgba(47, 230, 199, 0);
   }
 }
 
