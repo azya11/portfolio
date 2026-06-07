@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motio
 import { projects } from '../data/projects.js'
 import { useMediaPrefs } from '../lib/useMediaPrefs.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 const EASE = [0.16, 1, 0.3, 1]
 
@@ -20,9 +21,11 @@ function SectionHead() {
           <em>built</em>
         </RevealLine>
       </h2>
-      <Reveal as="p" className="section-intro" delay={0.1}>
-        From an AI/AR capstone to a production payment platform serving tens of
-        thousands of people — a few systems I’ve shipped end to end.
+      <Reveal as="p" className="section-intro" dir="left">
+        <span className="hl">
+          From an AI/AR capstone to a production payment platform serving tens of
+          thousands of people — a few systems I’ve shipped end to end.
+        </span>
       </Reveal>
     </div>
   )
@@ -58,7 +61,7 @@ function GalleryList() {
             : {}
           return (
             <li key={p.title}>
-              <Reveal delay={i * 0.05}>
+              <Reveal dir={i % 2 ? 'right' : 'left'} order={i}>
                 <Tag
                   className={`work-row${active === i ? ' is-active' : ''}${p.link ? ' is-link' : ''}`}
                   onMouseEnter={() => setActive(i)}
@@ -116,7 +119,7 @@ function CardGrid() {
           ? { href: p.link, target: '_blank', rel: 'noreferrer' }
           : {}
         return (
-          <Reveal key={p.title} delay={i * 0.05}>
+          <Reveal key={p.title} dir={i % 2 ? 'right' : 'left'} order={i}>
             <Tag className={`work-card${p.link ? ' is-link' : ''}`} {...linkProps}>
               <div className="work-card-thumb">
                 <Thumb p={p} />
@@ -147,11 +150,11 @@ function CardGrid() {
 export default function Work() {
   const { isTouch } = useMediaPrefs()
   return (
-    <section className="section" id="work">
+    <Section id="work">
       <div className="container">
         <SectionHead />
         {isTouch ? <CardGrid /> : <GalleryList />}
       </div>
-    </section>
+    </Section>
   )
 }

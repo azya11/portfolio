@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { identity } from '../data/content.js'
-import { useSmoothScroll } from '../lib/SmoothScroll.jsx'
 
 const links = [
   { label: 'Work', href: '#work' },
@@ -12,9 +11,9 @@ const links = [
 
 export default function Nav({ ready }) {
   const [scrolled, setScrolled] = useState(false)
-  const smooth = useSmoothScroll()
 
   useEffect(() => {
+    // works for the Lenis fallback (native scroll) and is harmless under the pager
     const onScroll = () => setScrolled(window.scrollY > 40)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -23,7 +22,7 @@ export default function Nav({ ready }) {
 
   const go = (e, href) => {
     e.preventDefault()
-    smooth?.scrollTo(href, { offset: -10 })
+    window.dispatchEvent(new CustomEvent('app:navigate', { detail: href }))
   }
 
   return (

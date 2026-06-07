@@ -1,6 +1,7 @@
 import { identity } from '../data/content.js'
 import { useMagnetic } from '../lib/hooks.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 const socials = [
   { label: 'GitHub', href: identity.github },
@@ -12,7 +13,7 @@ const socials = [
 export default function Contact() {
   const email = useMagnetic(0.2)
   return (
-    <section className="section contact" id="contact">
+    <Section className="section contact" id="contact">
       <div className="container">
         <div className="kicker kicker-center">
           <span className="kicker-idx">05</span>
@@ -26,22 +27,24 @@ export default function Contact() {
           </RevealLine>
         </h2>
 
-        <Reveal as="p" className="section-intro contact-intro" delay={0.1}>
-          I’m open to software engineering roles and collaborations starting summer
-          2026. If you’re working on something hard, I’d love to hear about it.
+        <Reveal as="p" className="section-intro contact-intro" dir="left">
+          <span className="hl">
+            I’m open to software engineering roles and collaborations starting summer
+            2026. If you’re working on something hard, I’d love to hear about it.
+          </span>
         </Reveal>
 
-        <Reveal delay={0.15}>
+        <Reveal dir="right">
           <a className="email-link" href={`mailto:${identity.email}`} ref={email}>
-            {identity.email}
+            <span className="hl">{identity.email}</span>
           </a>
         </Reveal>
 
-        <Reveal as="p" className="availability" delay={0.2}>
+        <Reveal as="p" className="availability" dir="left">
           Usually replies within a day · {identity.location} (MST)
         </Reveal>
 
-        <Reveal className="socials" delay={0.25}>
+        <Reveal className="socials" dir="right">
           {socials.map((s) => (
             <a key={s.label} href={s.href} target="_blank" rel="noreferrer">
               {s.label}
@@ -49,6 +52,6 @@ export default function Contact() {
           ))}
         </Reveal>
       </div>
-    </section>
+    </Section>
   )
 }
