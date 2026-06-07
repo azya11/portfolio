@@ -4,20 +4,21 @@
    ========================================================================== */
 
 :root {
-  --bg: #08090c;
-  --bg-2: #0c0e12;
-  --bg-elev: #101319;
-  --line: rgba(180, 210, 230, 0.12);
-  --line-2: rgba(180, 210, 230, 0.2);
-  --text: #f3f6fb;
-  --muted: #b3bdce;
-  --faint: #7b8698;
-  --accent: #2fe6c7; /* cyan — matches the background teal light */
-  --accent-2: #ff4d8d; /* magenta — matches the background magenta light */
-  --ink: #04100e;
+  /* calm pastel scheme on a soft dark base */
+  --bg: #16151d;
+  --bg-2: #1c1b25;
+  --bg-elev: #232230;
+  --line: rgba(210, 205, 235, 0.12);
+  --line-2: rgba(210, 205, 235, 0.2);
+  --text: #efedf6;
+  --muted: #c7c3d9;
+  --faint: #918cab;
+  --accent: #c3b6f7; /* soft lavender */
+  --accent-2: #f3b6c6; /* soft rose */
+  --ink: #1c1830; /* dark text for use on pastel accents */
 
-  /* dark halo so text separates from the live 3D grid behind it */
-  --halo: 0 1px 2px rgba(3, 6, 10, 0.55), 0 2px 22px rgba(3, 6, 10, 0.45);
+  /* halo so text separates from the live 3D grid behind it */
+  --halo: 0 1px 2px rgba(10, 8, 18, 0.72), 0 2px 16px rgba(10, 8, 18, 0.6);
 
   --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
@@ -111,6 +112,12 @@ img {
   padding-inline: var(--gutter);
 }
 
+/* Section pager: content lives in a transform-driven track (no native scroll). */
+.pager-track {
+  position: relative;
+  will-change: transform;
+}
+
 /* ---------------------------------------------------------------- backgrounds */
 .bg-grid,
 .bg-grain,
@@ -128,12 +135,12 @@ img {
   background:
     linear-gradient(
       to bottom,
-      rgba(4, 6, 10, 0.62) 0%,
-      rgba(4, 6, 10, 0.26) 16%,
-      rgba(4, 6, 10, 0.26) 84%,
-      rgba(4, 6, 10, 0.66) 100%
+      rgba(8, 7, 14, 0.7) 0%,
+      rgba(8, 7, 14, 0.46) 22%,
+      rgba(8, 7, 14, 0.46) 78%,
+      rgba(8, 7, 14, 0.72) 100%
     ),
-    radial-gradient(135% 95% at 50% 48%, rgba(4, 6, 10, 0) 38%, rgba(4, 6, 10, 0.5) 100%);
+    radial-gradient(120% 95% at 50% 50%, rgba(8, 7, 14, 0.3) 0%, rgba(8, 7, 14, 0.52) 100%);
 }
 .bg-grid {
   background-image:
@@ -318,18 +325,18 @@ img {
 /* ================================================================= HERO */
 .hero {
   position: relative;
-  min-height: 100svh;
+  height: 100svh;
   display: flex;
   align-items: center;
-  padding-block: 120px 80px;
+  padding-block: clamp(86px, 11vh, 120px) clamp(64px, 9vh, 96px);
   overflow: hidden;
 }
 .hero-glow {
   position: absolute;
   z-index: 0;
   background:
-    radial-gradient(42% 50% at 16% 24%, rgba(255, 77, 141, 0.1), transparent 70%),
-    radial-gradient(45% 45% at 84% 28%, rgba(47, 230, 199, 0.09), transparent 70%);
+    radial-gradient(42% 50% at 16% 24%, rgba(195, 182, 247, 0.12), transparent 70%),
+    radial-gradient(45% 45% at 84% 28%, rgba(243, 182, 198, 0.1), transparent 70%);
 }
 .hero-inner {
   position: relative;
@@ -471,25 +478,6 @@ img {
   letter-spacing: 0.08em;
   color: var(--faint);
 }
-.scroll-cue {
-  position: absolute;
-  left: var(--gutter);
-  bottom: 28px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--faint);
-  z-index: 1;
-}
-.scroll-cue-line {
-  width: 48px;
-  height: 1px;
-  background: linear-gradient(to right, var(--accent), transparent);
-}
 
 /* ============================================================== BUTTONS */
 .btn {
@@ -511,7 +499,7 @@ img {
   color: var(--ink);
 }
 .btn-primary:hover {
-  background: #56f0d8;
+  background: #d2c8fb;
 }
 .btn-ghost {
   border-color: var(--line-2);
@@ -543,10 +531,20 @@ img {
 /* ====================================================== SECTION PRIMITIVES */
 .section {
   position: relative;
-  padding-block: var(--section-pad);
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* clear the fixed nav at the top; keep content vertically centred */
+  padding-block: clamp(86px, 11vh, 120px) clamp(56px, 8vh, 96px);
+}
+.section-fit {
+  width: 100%;
+  transform-origin: center center;
 }
 .section-head {
-  margin-bottom: clamp(44px, 7vw, 88px);
+  margin-bottom: clamp(28px, 4vh, 56px);
 }
 .kicker {
   display: flex;
@@ -678,7 +676,8 @@ img {
 }
 .work-preview-card {
   position: relative;
-  width: clamp(240px, 24vw, 360px);
+  /* 35% smaller than before */
+  width: clamp(156px, 15.6vw, 234px);
   aspect-ratio: 4 / 3;
   border-radius: 14px;
   overflow: hidden;
@@ -691,6 +690,11 @@ img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* project imagery in black & white */
+.work-preview-card img,
+.work-card-thumb img {
+  filter: grayscale(1) contrast(1.04);
 }
 .thumb-placeholder {
   display: grid;
@@ -819,9 +823,9 @@ img {
 /* ================================================================ ABOUT */
 .about-grid {
   display: grid;
-  grid-template-columns: minmax(260px, 0.8fr) 1.2fr;
-  gap: clamp(32px, 5vw, 72px);
-  align-items: start;
+  grid-template-columns: minmax(220px, 0.75fr) 1.25fr;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
 }
 .about-photo-wrap {
   position: relative;
@@ -829,6 +833,8 @@ img {
 .about-photo {
   position: relative;
   aspect-ratio: 4 / 5;
+  max-height: 58svh;
+  margin-inline: auto;
   border-radius: 18px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -855,9 +861,9 @@ img {
   padding: 8px 14px;
 }
 .about-text p {
-  margin: 0 0 18px;
+  margin: 0 0 12px;
   color: var(--muted);
-  font-size: clamp(15px, 1.4vw, 18px);
+  font-size: clamp(14px, 1.25vw, 16.5px);
 }
 .about-text strong {
   color: var(--text);
@@ -866,18 +872,18 @@ img {
 .about-pull {
   font-family: var(--font-display) !important;
   font-style: italic;
-  font-size: clamp(24px, 3vw, 38px) !important;
-  line-height: 1.25;
+  font-size: clamp(20px, 2.5vw, 31px) !important;
+  line-height: 1.22;
   color: var(--text) !important;
-  margin-bottom: 28px !important;
+  margin-bottom: 18px !important;
 }
 .skill-groups {
-  margin-top: 32px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 12px;
   border-top: 1px solid var(--line);
-  padding-top: 28px;
+  padding-top: 18px;
 }
 .skill-group {
   display: grid;
@@ -1038,13 +1044,13 @@ img {
 }
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(47, 230, 199, 0.5);
+    box-shadow: 0 0 0 0 rgba(195, 182, 247, 0.5);
   }
   70% {
-    box-shadow: 0 0 0 7px rgba(47, 230, 199, 0);
+    box-shadow: 0 0 0 7px rgba(195, 182, 247, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(47, 230, 199, 0);
+    box-shadow: 0 0 0 0 rgba(195, 182, 247, 0);
   }
 }
 

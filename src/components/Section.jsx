@@ -1,23 +1,24 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useFit } from '../lib/useFit.js'
 
 /**
  * Section state shared with the content inside:
  *  - 'below'  : not yet reached (waiting off-frame)
  *  - 'active' : centered in the viewport (the current "state")
  *  - 'above'  : scrolled past (lifted away)
- * Reveal/RevealLine read this so a whole section animates in/out together.
  */
 const SectionStateContext = createContext('active')
 export const useSectionState = () => useContext(SectionStateContext)
 
-export default function Section({ id, className = 'section', children, ...rest }) {
+export default function Section({ id, className = 'section', fit = true, children, ...rest }) {
   const ref = useRef(null)
+  const fitRef = useRef(null)
   const [state, setState] = useState('below')
 
+  // Broadcast active/above/below based on viewport center.
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    // active once the section overlaps the central band of the viewport
     const io = new IntersectionObserver(
       ([e]) => {
         if (e.isIntersecting) setState('active')
@@ -29,9 +30,21 @@ export default function Section({ id, className = 'section', children, ...rest }
     return () => io.disconnect()
   }, [])
 
+  // Scale content down if it would overflow the pane, so a section's full data
+  // always fits the frame (never clipped).
+  useFit(fitRef, fit)
+
+  const inner = fit ? (
+    <div className="section-fit" ref={fitRef}>
+      {children}
+    </div>
+  ) : (
+    children
+  )
+
   return (
     <section ref={ref} id={id} className={className} data-section {...rest}>
-      <SectionStateContext.Provider value={state}>{children}</SectionStateContext.Provider>
+      <SectionStateContext.Provider value={state}>{inner}</SectionStateContext.Provider>
     </section>
   )
 }

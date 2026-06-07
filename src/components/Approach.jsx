@@ -1,9 +1,10 @@
 import { principles } from '../data/content.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 export default function Approach() {
   return (
-    <section className="section" id="approach">
+    <Section id="approach">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
@@ -26,7 +27,7 @@ export default function Approach() {
 
         <div className="principles-grid">
           {principles.map((p, i) => (
-            <Reveal as="article" className="principle" key={p.title} dir={i % 2 ? 'right' : 'left'}>
+            <Reveal as="article" className="principle" key={p.title} dir={i % 2 ? 'right' : 'left'} order={i}>
               <span className="principle-num">{String(i + 1).padStart(2, '0')}</span>
               <h3>{p.title}</h3>
               <p>{p.body}</p>
@@ -34,6 +35,6 @@ export default function Approach() {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

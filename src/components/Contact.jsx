@@ -1,6 +1,7 @@
 import { identity } from '../data/content.js'
 import { useMagnetic } from '../lib/hooks.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 const socials = [
   { label: 'GitHub', href: identity.github },
@@ -12,7 +13,7 @@ const socials = [
 export default function Contact() {
   const email = useMagnetic(0.2)
   return (
-    <section className="section contact" id="contact">
+    <Section className="section contact" id="contact">
       <div className="container">
         <div className="kicker kicker-center">
           <span className="kicker-idx">05</span>
@@ -51,6 +52,6 @@ export default function Contact() {
           ))}
         </Reveal>
       </div>
-    </section>
+    </Section>
   )
 }

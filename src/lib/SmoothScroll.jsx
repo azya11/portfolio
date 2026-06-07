@@ -79,6 +79,14 @@ export function SmoothScroll({ children, paused = false }) {
     },
   }
 
+  // Nav links dispatch this; handle it on the fallback (Lenis / native) path.
+  useEffect(() => {
+    const onNav = (e) => api.scrollTo(e.detail, { offset: -10 })
+    window.addEventListener('app:navigate', onNav)
+    return () => window.removeEventListener('app:navigate', onNav)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <SmoothScrollContext.Provider value={api}>
       {ready ? children : null}

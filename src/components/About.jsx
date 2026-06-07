@@ -2,12 +2,13 @@ import { aboutParagraphs, aboutBadge } from '../data/content.js'
 import { skillGroups } from '../data/skills.js'
 import { useParallax } from '../lib/hooks.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 export default function About() {
   const photoInner = useParallax(0.08)
 
   return (
-    <section className="section" id="about">
+    <Section id="about">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
@@ -62,6 +63,6 @@ export default function About() {
           </Reveal>
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

@@ -1,9 +1,10 @@
 import { roles } from '../data/experience.js'
 import { Reveal, RevealLine } from './Reveal.jsx'
+import Section from './Section.jsx'
 
 export default function Experience() {
   return (
-    <section className="section" id="experience">
+    <Section id="experience">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
@@ -21,7 +22,7 @@ export default function Experience() {
 
         <div className="timeline">
           {roles.map((r, i) => (
-            <Reveal as="article" className="xp" key={r.company} dir={i % 2 ? 'right' : 'left'}>
+            <Reveal as="article" className="xp" key={r.company} dir={i % 2 ? 'right' : 'left'} order={i}>
               <div className="xp-line" aria-hidden="true" />
               <div className="xp-head">
                 <h3>
@@ -41,6 +42,6 @@ export default function Experience() {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   )
 }

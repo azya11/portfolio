@@ -54,18 +54,18 @@ function Scene() {
   const pressedAt = useMemo(() => new Float64Array(count), [count]) // 0 = idle
   const cubeGeo = useMemo(() => new THREE.BoxGeometry(grid.cw, grid.ch, grid.depth), [grid])
   // BoxGeometry material order: +X, -X, +Y, -Y, +Z(top/lid), -Z(back).
-  // Side walls (the four X/Y faces revealed when a cube is pressed in) are dark
-  // cyan; the lid + back stay near-black so the resting field reads dark.
+  // Side walls (revealed when a cube is pressed in) are a soft dark lavender;
+  // lid + back stay deep so the resting field reads calm.
   const cubeMats = useMemo(() => {
-    const side = new THREE.MeshStandardMaterial({ color: '#0c3531', roughness: 0.5, metalness: 0.2 })
-    const lid = new THREE.MeshStandardMaterial({ color: '#080f13', roughness: 0.55, metalness: 0.15 })
+    const side = new THREE.MeshStandardMaterial({ color: '#2a2740', roughness: 0.6, metalness: 0.1 })
+    const lid = new THREE.MeshStandardMaterial({ color: '#16151f', roughness: 0.6, metalness: 0.1 })
     return [side, side, side, side, lid, lid]
   }, [])
   const frameGeo = useMemo(() => makeCubeFrame(grid.cw, grid.ch, grid.depth), [grid])
   const dummy = useMemo(() => new THREE.Object3D(), [])
-  // edge colours: dim cyan at rest → bright cyan when pressed in
-  const edgeIdle = useMemo(() => new THREE.Color('#2fe6c7').multiplyScalar(0.32), [])
-  const edgeHot = useMemo(() => new THREE.Color(0.5, 1.0, 0.92), [])
+  // edge colours: soft lavender at rest → bright pale lavender when pressed in
+  const edgeIdle = useMemo(() => new THREE.Color('#c3b6f7').multiplyScalar(0.42), [])
+  const edgeHot = useMemo(() => new THREE.Color('#ece4ff'), [])
   const edgeTmp = useMemo(() => new THREE.Color(), [])
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const plane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), [])
@@ -152,16 +152,16 @@ function Scene() {
 
   return (
     <>
-      <ambientLight intensity={0.34} color="#243a4a" />
+      <ambientLight intensity={0.4} color="#3a3550" />
       <pointLight
-        color="#16e0c8"
-        intensity={11}
+        color="#b9a9f2"
+        intensity={10}
         distance={24}
         decay={1.1}
         position={[VIS_W * 0.42, VIS_H * 0.12, 3.2]}
       />
       <pointLight
-        color="#16e0c8"
+        color="#f0b3c6"
         intensity={6}
         distance={24}
         decay={1.2}
