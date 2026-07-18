@@ -1112,6 +1112,12 @@ img {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Exempt: the skip-link's reveal-on-focus is an a11y affordance, not
+     decorative motion, so it keeps its transition under reduced motion. */
+  .skip-link {
+    transition-duration: 0.25s !important;
+  }
 }
 
 /* ========================================================= CHAPTER RAIL */
