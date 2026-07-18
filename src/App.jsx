@@ -3,6 +3,7 @@ import { AnimatePresence } from 'framer-motion'
 import { SmoothScroll } from './lib/SmoothScroll.jsx'
 import { useMediaPrefs } from './lib/useMediaPrefs.js'
 import Preloader from './components/Preloader.jsx'
+import SignalLine from './components/SignalLine.jsx'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
 import Work from './components/Work.jsx'
@@ -36,6 +37,8 @@ export default function App() {
       )}
       <div className="bg-scrim" aria-hidden="true" />
       <div className="bg-grain" aria-hidden="true" />
+
+      <SignalLine />
 
       <Nav ready={!loading} />
 

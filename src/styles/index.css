@@ -300,6 +300,62 @@ img {
   animation: pulse-ring 2s var(--ease) infinite;
 }
 
+/* ============================================================= SIGNAL LINE */
+.signal-line {
+  position: absolute;
+  top: 0;
+  left: 28px;
+  width: 2px;
+  z-index: 5;
+  pointer-events: none;
+}
+.signal-track {
+  position: absolute;
+  inset: 0;
+  background: var(--line);
+}
+.signal-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--signal-gradient);
+  transform: scaleY(0);
+  transform-origin: top;
+  box-shadow: 0 0 12px 1px rgba(124, 108, 255, 0.5);
+}
+.signal-packet {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -4px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--signal-2);
+  box-shadow: 0 0 14px 4px rgba(255, 143, 208, 0.7);
+}
+.signal-node {
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -3px;
+  margin-top: -3px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: var(--bg-2);
+  transition: background 0.4s var(--ease), box-shadow 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.signal-node.is-active {
+  background: var(--signal-1);
+  box-shadow: 0 0 16px 3px rgba(124, 108, 255, 0.7);
+  transform: scale(1.6);
+}
+@media (max-width: 900px) {
+  .signal-line {
+    left: 12px;
+  }
+}
+
 /* ================================================================= HERO */
 .hero {
   position: relative;
