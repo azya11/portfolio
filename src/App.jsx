@@ -2,7 +2,6 @@ import { lazy, Suspense, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { SmoothScroll } from './lib/SmoothScroll.jsx'
 import { useMediaPrefs } from './lib/useMediaPrefs.js'
-import Pager from './components/Pager.jsx'
 import Preloader from './components/Preloader.jsx'
 import Nav from './components/Nav.jsx'
 import Hero from './components/Hero.jsx'
@@ -21,27 +20,13 @@ export default function App() {
   const { reducedMotion, isTouch } = useMediaPrefs()
   const interactive = !reducedMotion && !isTouch
 
-  const content = (
-    <>
-      <main>
-        <Hero ready={!loading} />
-        <Work />
-        <Experience />
-        <About />
-        <Approach />
-        <Contact />
-      </main>
-      <Footer />
-    </>
-  )
-
   return (
     <>
       <AnimatePresence>
         {loading && <Preloader key="preloader" onDone={() => setLoading(false)} />}
       </AnimatePresence>
 
-      {/* fixed background layers */}
+      {/* fixed background layers — GridField moves into Hero in Task 8 */}
       {interactive ? (
         <Suspense fallback={<div className="bg-grid" aria-hidden="true" />}>
           <GridField />
@@ -54,11 +39,17 @@ export default function App() {
 
       <Nav ready={!loading} />
 
-      {interactive ? (
-        <Pager loading={loading}>{content}</Pager>
-      ) : (
-        <SmoothScroll paused={loading}>{content}</SmoothScroll>
-      )}
+      <SmoothScroll paused={loading}>
+        <main id="main">
+          <Hero ready={!loading} />
+          <Work />
+          <Experience />
+          <About />
+          <Approach />
+          <Contact />
+        </main>
+        <Footer />
+      </SmoothScroll>
     </>
   )
 }
