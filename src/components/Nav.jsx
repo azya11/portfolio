@@ -2,18 +2,10 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { identity } from '../data/content.js'
 
-const links = [
-  { label: 'Work', href: '#work' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
-]
-
 export default function Nav({ ready }) {
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    // works for the Lenis fallback (native scroll) and is harmless under the pager
     const onScroll = () => setScrolled(window.scrollY > 40)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -37,13 +29,6 @@ export default function Nav({ ready }) {
           <span className="nav-mark-dot" />
           {identity.firstName} {identity.lastName[0]}.
         </a>
-        <nav className="nav-links">
-          {links.map((l) => (
-            <a key={l.href} href={l.href} onClick={(e) => go(e, l.href)}>
-              {l.label}
-            </a>
-          ))}
-        </nav>
         <a className="nav-status" href="#contact" onClick={(e) => go(e, '#contact')}>
           <span className="live" />
           Available

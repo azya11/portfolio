@@ -5,6 +5,7 @@ import { useMediaPrefs } from './lib/useMediaPrefs.js'
 import Preloader from './components/Preloader.jsx'
 import SignalLine from './components/SignalLine.jsx'
 import Nav from './components/Nav.jsx'
+import ChapterRail from './components/ChapterRail.jsx'
 import Hero from './components/Hero.jsx'
 import Work from './components/Work.jsx'
 import Experience from './components/Experience.jsx'
@@ -41,6 +42,7 @@ export default function App() {
       <SignalLine />
 
       <Nav ready={!loading} />
+      <ChapterRail />
 
       <SmoothScroll paused={loading}>
         <main id="main">
