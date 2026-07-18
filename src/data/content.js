@@ -27,15 +27,15 @@ export const rotatingRoles = [
 
 // Hero stat counters.
 export const stats = [
-  { value: 70, suffix: 'k+', label: 'Users served' },
-  { value: 3, suffix: 'yrs', label: 'Experience' },
-  { value: 10, suffix: '+', label: 'Microservices' },
+  { value: 8, suffix: 'mo', label: 'Experience' },
+  { value: 12, suffix: '+', label: 'API endpoints' },
+  { value: 2, suffix: '', label: 'Internships' },
   { value: 85, suffix: '%', label: 'Test coverage' },
 ]
 
 export const lead =
-  'Software developer with 3 years shipping production backends and full-stack ' +
-  'features across React, Node.js, and .NET. I like the invisible work — clean APIs, ' +
+  'Software developer with hands-on internship experience shipping production backends and ' +
+  'full-stack features across React, Node.js, and .NET. I like the invisible work — clean APIs, ' +
   'real test coverage, and pipelines that let a team move fast without breaking things.'
 
 // Preloader: a greeting cycled through languages (skiper8-style).
@@ -80,10 +80,10 @@ export const aboutParagraphs = [
     'Science at Arizona State University this May.',
   'I’m drawn to the work no one sees but everyone feels — the API that never surprises you, ' +
     'the test that catches the bug before it ships.',
-  'Over the last three years I’ve shipped production backends and full-stack features — from ' +
-    'QR payment microservices serving 70k+ users to AI/AR capstone work as a team lead. I care ' +
-    'about clean contracts, honest test coverage, and automating the boring parts so a team can ' +
-    'focus on the hard ones.',
+  'Across two internships and a run of personal projects I’ve shipped production backends and ' +
+    'full-stack features — from ASP.NET Core microservices at Itransition to AI/AR capstone work ' +
+    'as a team lead. I care about clean contracts, honest test coverage, and automating the ' +
+    'boring parts so a team can focus on the hard ones.',
   'Outside of code I co-founded the Central Asian Student Association at ASU, placed as a 2× ' +
     'Amazon Hackathon finalist, and won a Claude Hackathon.',
 ]

@@ -37,15 +37,4 @@ export const projects = [
     image: '/projects/watchdna.png',
     link: 'https://watchdna.com/',
   },
-  {
-    title: 'Frienvas',
-    meta: 'Personal Project · 2025–2026',
-    blurb:
-      'A Chrome extension that lets students form friend groups and share Canvas LMS deadlines in ' +
-      'real time. Privacy-first by design: credentials stay on-device while a Manifest V3 service ' +
-      'worker syncs deadlines every 30 minutes.',
-    tags: ['JavaScript', 'Firebase', 'Vite', 'Chrome Extensions'],
-    image: '/projects/frienvas.png',
-    link: null,
-  },
 ]
