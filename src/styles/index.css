@@ -1209,3 +1209,22 @@ img {
     font-size: 12px;
   }
 }
+
+/* ======================================================= ACCESSIBILITY */
+.skip-link {
+  position: fixed;
+  top: -60px;
+  left: 16px;
+  z-index: 1000;
+  background: var(--bg-elev);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  transition: top 0.25s var(--ease);
+}
+.skip-link:focus {
+  top: 16px;
+}

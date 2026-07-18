@@ -18,6 +18,10 @@ export default function App() {
 
   return (
     <>
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+
       <AnimatePresence>
         {loading && <Preloader key="preloader" onDone={() => setLoading(false)} />}
       </AnimatePresence>
