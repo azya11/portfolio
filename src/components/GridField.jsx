@@ -64,8 +64,8 @@ function Scene() {
   const frameGeo = useMemo(() => makeCubeFrame(grid.cw, grid.ch, grid.depth), [grid])
   const dummy = useMemo(() => new THREE.Object3D(), [])
   // edge colours: soft lavender at rest → bright pale lavender when pressed in
-  const edgeIdle = useMemo(() => new THREE.Color('#c3b6f7').multiplyScalar(0.42), [])
-  const edgeHot = useMemo(() => new THREE.Color('#ece4ff'), [])
+  const edgeIdle = useMemo(() => new THREE.Color('#7c6cff').multiplyScalar(0.42), [])
+  const edgeHot = useMemo(() => new THREE.Color('#ffe0f5'), [])
   const edgeTmp = useMemo(() => new THREE.Color(), [])
   const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const plane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), [])
@@ -154,14 +154,14 @@ function Scene() {
     <>
       <ambientLight intensity={0.4} color="#3a3550" />
       <pointLight
-        color="#b9a9f2"
+        color="#8f7dff"
         intensity={10}
         distance={24}
         decay={1.1}
         position={[VIS_W * 0.42, VIS_H * 0.12, 3.2]}
       />
       <pointLight
-        color="#f0b3c6"
+        color="#ff8fd0"
         intensity={6}
         distance={24}
         decay={1.2}

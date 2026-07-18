@@ -202,7 +202,7 @@ img {
 
 /* =============================================== GRID FIELD (WebGL) */
 .grid-field {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: -1;
   pointer-events: none;
@@ -211,6 +211,19 @@ img {
 }
 .grid-field canvas {
   display: block;
+}
+.hero-grid-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: var(--grid-cell) var(--grid-cell);
+  opacity: 0.35;
+  -webkit-mask-image: radial-gradient(140% 130% at 50% 42%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(140% 130% at 50% 42%, #000 62%, transparent 100%);
 }
 
 /* ================================================================== NAV */
@@ -341,8 +354,8 @@ img {
   position: absolute;
   z-index: 0;
   background:
-    radial-gradient(42% 50% at 16% 24%, rgba(195, 182, 247, 0.12), transparent 70%),
-    radial-gradient(45% 45% at 84% 28%, rgba(243, 182, 198, 0.1), transparent 70%);
+    radial-gradient(42% 50% at 16% 24%, rgba(143, 125, 255, 0.14), transparent 70%),
+    radial-gradient(45% 45% at 84% 28%, rgba(255, 143, 208, 0.12), transparent 70%);
 }
 .hero-inner {
   position: relative;
@@ -537,17 +550,12 @@ img {
 /* ====================================================== SECTION PRIMITIVES */
 .section {
   position: relative;
-  height: 100svh;
-  overflow: hidden;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   /* clear the fixed nav at the top; keep content vertically centred */
   padding-block: clamp(86px, 11vh, 120px) clamp(56px, 8vh, 96px);
-}
-.section-fit {
-  width: 100%;
-  transform-origin: center center;
 }
 .section-head {
   margin-bottom: clamp(28px, 4vh, 56px);

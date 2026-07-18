@@ -1,10 +1,11 @@
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { identity, rotatingRoles, stats, lead } from '../data/content.js'
 import { useRotatingText, useCountUp, useMagnetic } from '../lib/hooks.js'
 import { useMediaPrefs } from '../lib/useMediaPrefs.js'
-import { useFit } from '../lib/useFit.js'
 import Section from './Section.jsx'
+
+const GridField = lazy(() => import('./GridField.jsx'))
 
 const EASE = [0.16, 1, 0.3, 1]
 const container = {
@@ -30,22 +31,27 @@ function Stat({ value, suffix, label, start }) {
 }
 
 export default function Hero({ ready }) {
-  const { reducedMotion } = useMediaPrefs()
+  const { reducedMotion, isTouch } = useMediaPrefs()
+  const interactive = !reducedMotion && !isTouch
   const roleRef = useRotatingText(rotatingRoles)
   const primary = useMagnetic(0.25)
   const ghost = useMagnetic(0.25)
-  const heroFit = useRef(null)
-  useFit(heroFit)
   const state = reducedMotion || ready ? 'show' : 'hidden'
 
   return (
-    <Section className="hero" id="top" fit={false}>
+    <Section className="hero" id="top" pin={false}>
       <div className="hero-glow" aria-hidden="true" />
+      {interactive ? (
+        <Suspense fallback={<div className="hero-grid-fallback" aria-hidden="true" />}>
+          <GridField />
+        </Suspense>
+      ) : (
+        <div className="hero-grid-fallback" aria-hidden="true" />
+      )}
       <span className="hero-rail" aria-hidden="true">
         {identity.title} · {identity.year}
       </span>
 
-      <div className="section-fit hero-fit" ref={heroFit}>
       <motion.div
         className="container hero-inner"
         variants={container}
@@ -105,7 +111,6 @@ export default function Hero({ ready }) {
           ))}
         </motion.div>
       </motion.div>
-      </div>
     </Section>
   )
 }
