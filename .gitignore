@@ -7,3 +7,13 @@ dist
 # leftover empty nested clone (delete manually)
 /portfolio/
 dev.log
+.vercel
+.env*
+
+# installed agent skills (npx skills add)
+.agents/
+.claude/skills/
+skills-lock.json
+
+# brainstorming visual companion sessions
+.superpowers/
