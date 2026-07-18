@@ -3,6 +3,18 @@
 
 export const projects = [
   {
+    title: 'Boxcores',
+    meta: 'Personal Project · 2026',
+    blurb:
+      'A social diary for the soccer matches you watch. Browse real matches, log the ones you\'ve ' +
+      'seen, rate them 0–5 in half-steps, tag and review them, then follow a privacy-aware friends ' +
+      'feed. Next.js frontend backed by a Go serverless API on Netlify, with Supabase Postgres, ' +
+      'Auth, Storage, and row-level security.',
+    tags: ['Next.js', 'TypeScript', 'Go', 'Supabase', 'PostgreSQL', 'Netlify'],
+    image: '/projects/boxcores.webp',
+    link: 'https://boxcores.com',
+  },
+  {
     title: 'Mapgen',
     meta: 'Personal Project · 2026',
     blurb:
@@ -34,17 +46,6 @@ export const projects = [
       'worker syncs deadlines every 30 minutes.',
     tags: ['JavaScript', 'Firebase', 'Vite', 'Chrome Extensions'],
     image: '/projects/frienvas.png',
-    link: null,
-  },
-  {
-    title: 'QR Payment Platform',
-    meta: 'TAS Group · Production · 2023–2025',
-    blurb:
-      'Production payment & B2B backend serving 70k+ active users. Built 6–10 microservices ' +
-      'exposing REST/SOAP APIs at hundreds of requests per second, backed by Kafka, RabbitMQ, ' +
-      'and tuned MS SQL / PostgreSQL.',
-    tags: ['C#', '.NET', 'Kafka', 'RabbitMQ', 'MS SQL'],
-    image: '/projects/qr-payments.jpg',
     link: null,
   },
 ]

@@ -25,16 +25,4 @@ export const roles = [
       'Merged <strong>40+ PRs</strong> with zero critical defects in a 5-person Agile squad.',
     ],
   },
-  {
-    role: 'C# / .NET Software Developer',
-    company: 'TAS Group',
-    date: 'Jul 2023 – Jul 2025',
-    place: 'On-site / Remote',
-    summary: 'Two years owning payment infrastructure real people depend on.',
-    points: [
-      'Developed <strong>6–10 microservices</strong> for QR payments & B2B backends used by <strong>70k+ active users</strong>.',
-      'Built REST/SOAP APIs handling hundreds of req/s; cut query time 10–20% across owned services.',
-      'Processed tens of thousands of daily events with <strong>Kafka & RabbitMQ</strong>; raised test coverage 40% → 65%.',
-    ],
-  },
 ]

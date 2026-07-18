@@ -12,7 +12,7 @@ export const identity = {
   phone: '+16022141634',
   phoneDisplay: '+1 602 214 1634',
   github: 'https://github.com/azya11',
-  linkedin: 'https://linkedin.com/in/aziz-shamuratov-236575259',
+  linkedin: 'https://www.linkedin.com/in/azizshamuratovv/',
   year: 2026,
 }
 
