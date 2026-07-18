@@ -762,7 +762,7 @@ Run: `npm run build`
 Expected: builds with no errors.
 
 Run: `npm run dev`, open in browser at a desktop viewport width (e.g. 1440px).
-Expected: scrolling now visibly **pins** each chapter (Approach, Experience, Work, About, Contact — Hero has `pin={false}` implicitly once Task 9 sets it, so for now it also pins, which is harmless) for roughly one extra viewport-height of scroll while its heading and content reveal progressively, then releases and scrolls on to the next chapter. No layout jump, no console errors, no GSAP warnings about missing plugin registration.
+Expected: scrolling now visibly **pins** each chapter (Approach, Experience, Work, About, Contact — Hero still passes the now-removed `fit={false}` prop until Task 8 rewrites it to `pin={false}`, so for now Hero also pins and may log a harmless React "unknown DOM attribute" console warning for `fit`; both go away once Task 8 lands) for roughly one extra viewport-height of scroll while its heading and content reveal progressively, then releases and scrolls on to the next chapter. No layout jump, no GSAP warnings about missing plugin registration.
 
 Resize the browser to a narrow width (< 480px) or use DevTools device emulation.
 Expected: chapters no longer pin; content reveals with a smooth ~0.9s fade/slide as each section enters the viewport during normal scroll.
