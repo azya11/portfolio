@@ -8,12 +8,12 @@ export default function About() {
   const photoInner = useParallax(0.08)
 
   return (
-    <Section id="about">
+    <Section id="core">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
-            <span className="kicker-idx">03</span>
-            <span>About</span>
+            <span className="kicker-idx">05</span>
+            <span>Core</span>
             <span className="kicker-rule" />
           </div>
           <h2 className="section-title">

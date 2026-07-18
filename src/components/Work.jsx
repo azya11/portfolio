@@ -11,8 +11,8 @@ function SectionHead() {
   return (
     <div className="section-head">
       <div className="kicker">
-        <span className="kicker-idx">01</span>
-        <span>Selected Work</span>
+        <span className="kicker-idx">04</span>
+        <span>Response</span>
         <span className="kicker-rule" />
       </div>
       <h2 className="section-title">
@@ -23,8 +23,8 @@ function SectionHead() {
       </h2>
       <Reveal as="p" className="section-intro" dir="left">
         <span className="hl">
-          From an AI/AR capstone to a production payment platform serving tens of
-          thousands of people — a few systems I’ve shipped end to end.
+          The payload coming back — a social diary app, an AI map generator, and
+          an AI/AR capstone, each shipped end to end.
         </span>
       </Reveal>
     </div>
@@ -150,7 +150,7 @@ function CardGrid() {
 export default function Work() {
   const { isTouch } = useMediaPrefs()
   return (
-    <Section id="work">
+    <Section id="response">
       <div className="container">
         <SectionHead />
         {isTouch ? <CardGrid /> : <GalleryList />}

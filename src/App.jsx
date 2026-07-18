@@ -42,10 +42,10 @@ export default function App() {
       <SmoothScroll paused={loading}>
         <main id="main">
           <Hero ready={!loading} />
-          <Work />
-          <Experience />
-          <About />
           <Approach />
+          <Experience />
+          <Work />
+          <About />
           <Contact />
         </main>
         <Footer />

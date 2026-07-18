@@ -4,12 +4,12 @@ import Section from './Section.jsx'
 
 export default function Experience() {
   return (
-    <Section id="experience">
+    <Section id="compute">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
-            <span className="kicker-idx">02</span>
-            <span>Career</span>
+            <span className="kicker-idx">03</span>
+            <span>Compute</span>
             <span className="kicker-rule" />
           </div>
           <h2 className="section-title">
@@ -18,6 +18,9 @@ export default function Experience() {
               <em>worked</em>
             </RevealLine>
           </h2>
+          <Reveal as="p" className="section-intro" dir="left">
+            The processing log — where the work actually happened.
+          </Reveal>
         </div>
 
         <div className="timeline">

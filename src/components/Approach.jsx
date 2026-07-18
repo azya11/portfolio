@@ -4,12 +4,12 @@ import Section from './Section.jsx'
 
 export default function Approach() {
   return (
-    <Section id="approach">
+    <Section id="middleware">
       <div className="container">
         <div className="section-head">
           <div className="kicker">
-            <span className="kicker-idx">04</span>
-            <span>Philosophy</span>
+            <span className="kicker-idx">02</span>
+            <span>Middleware</span>
             <span className="kicker-rule" />
           </div>
           <h2 className="section-title">
@@ -20,8 +20,8 @@ export default function Approach() {
             <RevealLine delay={0.12}>about building</RevealLine>
           </h2>
           <Reveal as="p" className="section-intro" dir="left">
-            A few principles I keep coming back to — they shape how I write, test,
-            and ship software.
+            The rules every request passes through before it's handled — a few
+            principles I keep coming back to.
           </Reveal>
         </div>
 

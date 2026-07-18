@@ -16,8 +16,8 @@ export default function Contact() {
     <Section className="section contact" id="contact">
       <div className="container">
         <div className="kicker kicker-center">
-          <span className="kicker-idx">05</span>
-          <span>Contact</span>
+          <span className="kicker-idx">06</span>
+          <span>200</span>
         </div>
 
         <h2 className="contact-title">
