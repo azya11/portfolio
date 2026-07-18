@@ -13,8 +13,11 @@
   --text: #efedf6;
   --muted: #c7c3d9;
   --faint: #918cab;
-  --accent: #c3b6f7; /* soft lavender */
-  --accent-2: #f3b6c6; /* soft rose */
+  --accent: #8f7dff; /* signal violet (was soft lavender) */
+  --accent-2: #ff8fd0; /* signal pink (was soft rose) */
+  --signal-1: #7c6cff;
+  --signal-2: #ff8fd0;
+  --signal-gradient: linear-gradient(180deg, var(--signal-1), var(--signal-2));
   --ink: #1c1830; /* dark text for use on pastel accents */
 
   /* halo so text separates from the live 3D grid behind it */
@@ -119,37 +122,12 @@ img {
 }
 
 /* ---------------------------------------------------------------- backgrounds */
-.bg-grid,
 .bg-grain,
-.bg-scrim,
 .hero-glow {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-}
-/* Calms the live 3D grid behind content: darker top/bottom (under nav + footer)
-   and a soft vignette, while leaving the centre readable. Sits above the canvas,
-   below all content. */
-.bg-scrim {
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(8, 7, 14, 0.7) 0%,
-      rgba(8, 7, 14, 0.46) 22%,
-      rgba(8, 7, 14, 0.46) 78%,
-      rgba(8, 7, 14, 0.72) 100%
-    ),
-    radial-gradient(120% 95% at 50% 50%, rgba(8, 7, 14, 0.3) 0%, rgba(8, 7, 14, 0.52) 100%);
-}
-.bg-grid {
-  background-image:
-    linear-gradient(to right, var(--line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-  background-size: var(--grid-cell) var(--grid-cell);
-  opacity: 0.45;
-  -webkit-mask-image: radial-gradient(150% 130% at 50% 40%, #000 60%, transparent 100%);
-  mask-image: radial-gradient(150% 130% at 50% 40%, #000 60%, transparent 100%);
 }
 .bg-grain {
   opacity: 0.05;
