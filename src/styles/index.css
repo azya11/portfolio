@@ -1173,7 +1173,7 @@ img {
   .chapter-rail {
     right: auto;
     left: 0;
-    top: 0;
+    top: 73px; /* sits below the fixed .nav (72px + 1px border), which would otherwise cover it (z-index: 100 > 90) and swallow taps */
     transform: none;
     width: 100%;
   }
