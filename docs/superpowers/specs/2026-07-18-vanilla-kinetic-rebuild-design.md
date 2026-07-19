@@ -68,6 +68,12 @@ gsap.ticker.lagSmoothing(0);
 
 ## Section design
 
+**Polish reference:** cantor8.io (an enterprise product site, not a scrollytelling
+site) was raised as inspiration — not for its light theme or corporate structure,
+but for its level of restraint: tight grid rhythm, confident type scale, subtle
+rather than showy motion. Treat that as the bar for craft/polish, not as a
+structural or palette reference.
+
 ### 1. Monolith (Hero)
 Full-viewport canvas, `THREE.Points` particle field (~1500–2000 points on desktop,
 reduced on mobile/low-end), slow ambient rotation/drift, no scroll-scrub yet (idle
