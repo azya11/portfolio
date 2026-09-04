@@ -1,0 +1,41 @@
+@import url('https://googleapis.com');
+
+.crimson-pro-azya {
+  font-family: "Times New Roman", serif;
+  font-style: normal;
+  font-size: 18x;
+  color: #6d8196
+}
+
+p {
+  font-family: "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-size: 32px;
+  font-weight: 700;
+  font-style: normal;
+  color: #4A4A4A
+}
+
+body {
+  margin: 0;                     /* Removes default browser spacing */
+  height: 100vh;                 /* Makes the body fill 100% of screen height */
+  display: flex;                 /* Activates Flexbox layout */
+  justify-content: center;       /* Centers horizontally */
+  align-items: center;           /* Centers vertically */
+  background-color: #f0f0f0;
+  font-family: 'Crimson Pro', serif;
+  font-optical-sizing: auto;
+  font-size: 32px;
+  font-weight: 700;
+  font-style: normal;
+  color: #4A4A4A;
+  background-color: #FFFFE3
+}
+    
+.text-center { text-align: center; }
+
+.text-right  { text-align: right; }
+
+.text-left   { text-align: left; }
+
+.text-justify{ text-align: justify; }
